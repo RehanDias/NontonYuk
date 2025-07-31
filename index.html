@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nonton TV Nasional</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
+
   <div class="max-w-7xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-center mb-8">📺 Nonton TV Nasional Online</h1>
 
-    <div id="channelContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+    <!-- Daftar Channel -->
+    <div id="channelContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
+    <!-- Player -->
     <div id="playerContainer" class="mt-10 hidden">
       <div class="flex justify-between items-center mb-2">
         <h2 id="playerTitle" class="text-2xl font-bold"></h2>
-        <button id="closePlayer" class="text-gray-600 hover:text-gray-800" aria-label="Tutup player">
-          ❌ Tutup
+        <button id="closePlayer" class="text-gray-600 hover:text-gray-800 text-xl" aria-label="Tutup player">
+          ❌
         </button>
       </div>
-      <iframe id="tvPlayer" class="w-full h-[280px] md:h-[480px] rounded-xl border border-gray-300 shadow" allowfullscreen></iframe>
+      <div class="aspect-video w-full rounded-xl overflow-hidden border border-gray-300 shadow">
+        <iframe id="tvPlayer" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen"></iframe>
+      </div>
     </div>
   </div>
 
@@ -45,12 +50,12 @@
 
     channels.forEach(channel => {
       const card = document.createElement("div");
-      card.className = "bg-white p-4 rounded-xl shadow flex flex-col justify-between hover:shadow-lg transition-shadow";
+      card.className = "bg-white p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex flex-col justify-between";
 
       card.innerHTML = `
         <div>
           <h2 class="text-xl font-semibold mb-2">${channel.name}</h2>
-          <p class="${channel.status === "online" ? "text-green-600" : "text-red-500"} font-medium mb-2">
+          <p class="${channel.status === "online" ? "text-green-600" : "text-red-500"} font-medium mb-3">
             ${channel.status === "online" ? "✔️ Online" : "❌ Offline"}
           </p>
         </div>
@@ -59,7 +64,7 @@
             ? "mt-auto bg-blue-600 hover:bg-blue-700 text-white"
             : "mt-auto bg-gray-300 text-gray-600 cursor-not-allowed"} px-4 py-2 rounded transition-colors"
           onclick="${channel.status === "online" ? `playStream('${channel.url}', '${channel.name}')` : ''}">
-          ${channel.status === "online" ? "▶️ Tonton" : "❌ Offline"}
+          ${channel.status === "online" ? "▶️ Tonton" : "Tidak Tersedia"}
         </button>
       `;
 
@@ -74,7 +79,9 @@
       player.src = url;
       playerTitle.textContent = name;
       playerContainer.classList.remove("hidden");
-      window.scrollTo({ top: playerContainer.offsetTop - 100, behavior: "smooth" });
+      setTimeout(() => {
+        player.scrollIntoView({ behavior: "smooth" });
+      }, 300);
     }
 
     document.getElementById("closePlayer").addEventListener("click", () => {
@@ -84,5 +91,6 @@
       playerContainer.classList.add("hidden");
     });
   </script>
+
 </body>
 </html>
